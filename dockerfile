@@ -1,10 +1,13 @@
-FROM python:3.6.1
+FROM alpine:3.1
 
-COPY requirements.txt /
-RUN pip install -r ./requirements.txt
+# Update
+RUN apk add --update python py-pip
 
-COPY app/ /app/
+# Install app dependencies
+RUN pip install Flask
 
-WORKDIR /app
+# Bundle app source
+COPY * /src/
 
-ENV FLASK_APP=app.py
+EXPOSE  8000
+CMD ["python", "/src/python-webapp-flask/__init__.py", "-p 8000"]
