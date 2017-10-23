@@ -1,13 +1,17 @@
-FROM alpine:3.1
+FROM ubuntu:14.04
 
 # Update
-RUN apk add --update python py-pip
+RUN apt-get update && apt-get install -y python-pip python-dev && apt-get clean
 
 # Install app dependencies
-RUN pip install Flask
+RUN pip install flask
 
-# Bundle app source
-COPY * /src/
+RUN mkdir /code
+WORKDIR /code
+ADD requirements.txt /code/
+RUN pip install -r requirements.txt
+ADD . /code/
 
-EXPOSE  8000
-CMD ["python", "/src/python-webapp-flask/__init__.py", "-p 8000"]
+EXPOSE 8080 80 5555
+
+CMD ["python", "runserver.py"]
